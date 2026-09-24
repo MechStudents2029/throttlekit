@@ -11,6 +11,7 @@
 - Sliding-window counter strategy
 - Compare / switch strategies via options
 - Tests for edge windows
+- Status 2026-09-24: not started.
 
 ## Day 3 — Distributed backend (optional Redis)
 - docker-compose Redis
