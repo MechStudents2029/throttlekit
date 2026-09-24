@@ -6,15 +6,50 @@ Free/local only. No paid APIs.
 
 ## Status
 
-**Day 1** starts the week plan: core token-bucket limiter + Vitest unit tests.
+**Day 1** lands the core token-bucket limiter (`createLimiter`, `tryTake`, `wait`) and Vitest unit tests. The bucket starts full, refills continuously (fractional tokens included), and takes an injectable clock so tests do not use real timers.
+
+Days 2–5 are still ahead: sliding window, optional Redis, rate-limit headers plus a JSONPlaceholder demo, then benchmarks and README polish. See `WEEK_PLAN.md`.
 
 ## Setup
 
 ```bash
 npm install
+```
+
+## Tests
+
+```bash
 npm test
 ```
 
+Typecheck / emit:
+
+```bash
+npm run build
+```
+
+Watch mode: `npm run test:watch`.
+
+## Usage
+
+```ts
+import { createLimiter } from "throttlekit";
+
+const limiter = createLimiter({
+  capacity: 10,
+  refillPerSecond: 2,
+});
+
+const result = limiter.tryTake();
+if (!result.ok) {
+  // result.retryAfterMs is how long until one token is available.
+  // result.remaining is the current (possibly fractional) balance.
+  await limiter.wait();
+}
+```
+
+`tryTake(n)` removes `n` tokens (default `1`) or leaves the bucket unchanged. `wait(n)` takes the same way, sleeping via the clock until the refill covers the cost. Pass `clock: { now, sleep }` to drive time yourself. `capacity` is the maximum balance. A cost larger than `capacity` throws, because that take can never succeed.
+
 ## Week plan
 
-See `WEEK_PLAN.md`.
+See `WEEK_PLAN.md`. Days 2–5 are not implemented yet.
