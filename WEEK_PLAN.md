@@ -1,6 +1,6 @@
 ﻿# ThrottleKit — weekday slices (credit-light)
 
-## Day 1 — Core token bucket
+## Day 1 — Core token bucket ✅
 - `createLimiter` / `tryTake` / `wait` API
 - Configurable capacity + refill rate
 - Injectable clock for deterministic tests
