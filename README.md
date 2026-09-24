@@ -53,4 +53,4 @@ if (!result.ok) {
 
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 2–5 are not implemented yet.
+See `WEEK_PLAN.md`. Days 2–5 are not implemented yet. Next slice is Day 2 (sliding window), still not started as of 2026-09-24.
