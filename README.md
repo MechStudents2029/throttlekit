@@ -9,6 +9,7 @@ Free/local only. No paid APIs.
 **Day 1** lands the core token-bucket limiter (`createLimiter`, `tryTake`, `wait`) and Vitest unit tests. The bucket starts full, refills continuously (fractional tokens included), and takes an injectable clock so tests do not use real timers.
 
 Days 2–5 are still ahead: sliding window, optional Redis, rate-limit headers plus a JSONPlaceholder demo, then benchmarks and README polish. See `WEEK_PLAN.md`.
+Day 1 is on main as of 2026-09-24 and stays as shipped.
 
 ## Setup
 
