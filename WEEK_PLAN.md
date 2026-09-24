@@ -5,6 +5,7 @@
 - Configurable capacity + refill rate
 - Injectable clock for deterministic tests
 - Vitest unit tests
+- Merged on main 2026-09-24; no further Day 1 behavior changes.
 
 ## Day 2 — Sliding window
 - Sliding-window counter strategy
