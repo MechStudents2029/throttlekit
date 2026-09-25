@@ -18,6 +18,7 @@
 - docker-compose Redis
 - Redis-backed limiter
 - Integration tests skip if Redis down
+- Status 2026-09-25: not started.
 
 ## Day 4 — Headers + tiny HTTP demo
 - `X-RateLimit-*` / `Retry-After` helpers
