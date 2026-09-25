@@ -6,3 +6,4 @@
 - 2026-09-24 — Day 2 sliding-window slice is still unstarted.
 - 2026-09-25 — Day 2: sliding-window limiter (`strategy: "sliding-window"`, `windowMs`, `max`) and edge-window Vitest tests.
 - 2026-09-25 — Day 2 squash-merged on main (17c222b); sliding-window behavior left as shipped.
+- 2026-09-25 — Day 3 optional Redis backend is next and still unstarted.
