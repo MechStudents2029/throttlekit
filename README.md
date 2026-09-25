@@ -12,6 +12,7 @@ Free/local only. No paid APIs.
 
 Days 3–5 are still ahead: optional Redis, rate-limit headers plus a JSONPlaceholder demo, then benchmarks and README polish. See `WEEK_PLAN.md`.
 Day 1 is on main as of 2026-09-24 and stays as shipped.
+Day 2 is on main as of 2026-09-25 and stays as shipped.
 
 ## Setup
 
