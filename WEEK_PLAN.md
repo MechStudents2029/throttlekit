@@ -12,6 +12,7 @@
 - Compare / switch strategies via options (`strategy: "token-bucket" | "sliding-window"`)
 - Tests for edge windows
 - Shipped 2026-09-25. Token bucket stays the default when `strategy` is omitted.
+- Merged on main 2026-09-25; no further Day 2 behavior changes.
 
 ## Day 3 — Distributed backend (optional Redis)
 - docker-compose Redis
