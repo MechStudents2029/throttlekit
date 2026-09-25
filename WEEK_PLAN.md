@@ -7,11 +7,11 @@
 - Vitest unit tests
 - Merged on main 2026-09-24; no further Day 1 behavior changes.
 
-## Day 2 — Sliding window
+## Day 2 — Sliding window ✅
 - Sliding-window counter strategy
-- Compare / switch strategies via options
+- Compare / switch strategies via options (`strategy: "token-bucket" | "sliding-window"`)
 - Tests for edge windows
-- Status 2026-09-24: not started.
+- Shipped 2026-09-25. Token bucket stays the default when `strategy` is omitted.
 
 ## Day 3 — Distributed backend (optional Redis)
 - docker-compose Redis
