@@ -75,4 +75,4 @@ Each admitted take is stored with its timestamp and cost. It counts until it is 
 
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 3–5 are not implemented yet.
+See `WEEK_PLAN.md`. Days 3–5 are not implemented yet. Next slice is Day 3 (optional Redis), still not started as of 2026-09-25.
