@@ -31,3 +31,4 @@
 ## Day 5 — Benchmarks + README polish
 - Microbench script
 - Architecture + resume bullets
+- Status 2026-09-27: not started.
