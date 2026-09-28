@@ -10,5 +10,11 @@ export type {
   TakeResult,
   TokenBucketOptions,
 } from "./limiter.js";
+export { createRedisStore } from "./redis-store.js";
+export type {
+  RedisCommandClient,
+  RedisLimiterStore,
+  RedisStoreOptions,
+} from "./redis-store.js";
 export { createMemoryStore } from "./store.js";
 export type { LimiterStore, StoreMutation } from "./store.js";
