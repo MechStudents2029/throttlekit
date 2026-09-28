@@ -12,11 +12,13 @@ Free/local only. No paid APIs.
 
 **Day 3** adds an optional shared store. `createLimiter` stays synchronous and in-memory. `createDistributedLimiter` keeps the same rules, but the counter lives in a `LimiterStore`: `createMemoryStore` in one process, or `createRedisStore` when several processes must share a counter. Local Redis only (`docker compose up -d`, or `REDIS_URL`). No paid APIs.
 
-Days 4–5 are still ahead: rate-limit headers plus a JSONPlaceholder demo, then benchmarks and README polish. See `WEEK_PLAN.md`.
+**Day 4** adds `rateLimitHeaders`, which turns a `tryTake` decision into `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, and `Retry-After` when the take is denied. A small local server (`npm run demo` after `npm run build`) sits `createLimiter` in front of JSONPlaceholder.
+
+Day 5 (benchmarks and README polish) is still ahead. See `WEEK_PLAN.md`.
 Day 1 is on main as of 2026-09-24 and stays as shipped.
 Day 2 is on main as of 2026-09-25 and stays as shipped.
 Day 3 is on main as of 2026-09-27 and stays as shipped.
-Day 4 and Day 5 are unstarted; Days 1–3 limiter behavior stays as shipped.
+Day 4 shipped 2026-09-28. Day 5 is unstarted. Days 1–3 limiter behavior stays as shipped.
 
 ## Setup
 
@@ -123,6 +125,43 @@ await redis.close();
 
 A client you pass to `createRedisStore({ client })` stays yours: ThrottleKit will not connect or close it. Omit `client` and call `close()` when the process is done. The counter is stored at `throttlekit:<key>`. A sliding-window key expires `windowMs` after the last update. A token-bucket key is not given a TTL, so an empty bucket is not treated as full just because Redis dropped it. A missing key starts as a full bucket or an empty window.
 
+### Rate-limit headers
+
+`rateLimitHeaders` reads a `tryTake` result. Pass the same maximum you configured (`capacity` or `max`) as `limit`. `nowMs` defaults to `Date.now()`; pass a fixed value in tests.
+
+```ts
+import { createLimiter, rateLimitHeaders } from "throttlekit";
+
+const limiter = createLimiter({ capacity: 10, refillPerSecond: 2 });
+const decision = limiter.tryTake();
+const headers = rateLimitHeaders(decision, { limit: 10 });
+
+headers["X-RateLimit-Limit"]; // "10"
+headers["X-RateLimit-Remaining"]; // whole units still available
+headers["X-RateLimit-Reset"]; // Unix seconds when this take could succeed
+// headers["Retry-After"] is set only when decision.ok is false
+// and retryAfterMs is finite (delay-seconds).
+```
+
+`X-RateLimit-Remaining` floors fractional tokens, so a partial token is not advertised as another request. On an allowed take, `X-RateLimit-Reset` is the decision time in Unix seconds. On a denial it is `now + retryAfterMs`, rounded up to a whole Unix second. `Retry-After` is that wait in whole seconds. When `retryAfterMs` is `Infinity` (a bucket that will never refill), both `Retry-After` and `X-RateLimit-Reset` are omitted.
+
+### HTTP demo
+
+The demo is a local Node `http` server. It allows 5 requests per 10 seconds, then proxies the path to `https://jsonplaceholder.typicode.com` (for example `/todos/1` or `/posts`). No API key. Build first so the server can import `dist/`.
+
+```bash
+npm run build
+npm run demo
+```
+
+`PORT` defaults to `3000`.
+
+```bash
+curl -i http://127.0.0.1:3000/todos/1
+```
+
+An allowed response forwards the upstream JSON and sets `X-RateLimit-*`. The next request past the limit is `429` with those headers and `Retry-After`.
+
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 4–5 are not implemented yet. Next slice is Day 4 (headers and a tiny HTTP demo), still not started as of 2026-09-27.
+See `WEEK_PLAN.md`. Day 4 (headers and the JSONPlaceholder demo) shipped 2026-09-28. Day 5 (benchmarks and README polish) is unstarted.

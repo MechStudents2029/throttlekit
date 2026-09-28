@@ -2,7 +2,7 @@
   "name": "throttlekit",
   "version": "0.1.0",
   "private": true,
-  "description": "TypeScript rate-limiting toolkit: token-bucket and sliding-window limiters, an optional Redis store, with headers and a tiny HTTP demo planned.",
+  "description": "TypeScript rate-limiting toolkit: token-bucket and sliding-window limiters, an optional Redis store, standard rate-limit headers, and a tiny HTTP demo.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,7 +18,8 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "demo": "node examples/demo-server/server.mjs"
   },
   "engines": {
     "node": ">=18"
