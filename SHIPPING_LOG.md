@@ -10,3 +10,4 @@
 - 2026-09-28 — Day 3: shared limiter store (`createMemoryStore`, `createRedisStore`, `createDistributedLimiter`). In-memory `createLimiter` stays the default.
 - 2026-09-28 — Day 3: Redis compare-and-set covered by a mock client; live Vitest skips when Redis is down. Local Redis is `docker compose up -d`.
 - 2026-09-27 — Day 3 squash-merged on main (4d6eaff); distributed limiter store left as shipped.
+- 2026-09-27 — Day 3 keeps `createLimiter` as the synchronous in-memory default; that behavior is frozen.
