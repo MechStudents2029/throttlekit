@@ -34,3 +34,4 @@
 - Architecture + resume bullets
 - Status 2026-09-28: not started.
 - Next slice after Day 4; benchmarks are unstarted.
+- No microbench script on main yet.
