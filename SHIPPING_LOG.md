@@ -17,3 +17,4 @@
 - 2026-09-28 — Day 4: local demo (`npm run build`, then `npm run demo`) rate-limits requests and proxies JSONPlaceholder. A denied call returns 429 with those headers.
 - 2026-09-28 — Day 5 benchmarks and README polish remain unstarted.
 - 2026-09-28 — Day 4 squash-merged on main (3f093a3); rate-limit headers and JSONPlaceholder demo left as shipped.
+- 2026-09-28 — Day 4 keeps rate-limit header helpers and the JSONPlaceholder demo as shipped; that behavior is frozen.
