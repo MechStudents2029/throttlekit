@@ -16,6 +16,7 @@ Days 4–5 are still ahead: rate-limit headers plus a JSONPlaceholder demo, then
 Day 1 is on main as of 2026-09-24 and stays as shipped.
 Day 2 is on main as of 2026-09-25 and stays as shipped.
 Day 3 is on main as of 2026-09-27 and stays as shipped.
+Day 4 and Day 5 are unstarted; Days 1–3 limiter behavior stays as shipped.
 
 ## Setup
 
