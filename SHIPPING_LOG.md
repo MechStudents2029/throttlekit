@@ -16,3 +16,4 @@
 - 2026-09-28 — Day 4: `rateLimitHeaders` maps a `tryTake` decision onto `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, and `Retry-After` when the take is denied.
 - 2026-09-28 — Day 4: local demo (`npm run build`, then `npm run demo`) rate-limits requests and proxies JSONPlaceholder. A denied call returns 429 with those headers.
 - 2026-09-28 — Day 5 benchmarks and README polish remain unstarted.
+- 2026-09-28 — Day 4 squash-merged on main (3f093a3); rate-limit headers and JSONPlaceholder demo left as shipped.
