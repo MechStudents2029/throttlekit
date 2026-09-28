@@ -124,4 +124,4 @@ A client you pass to `createRedisStore({ client })` stays yours: ThrottleKit wil
 
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 4–5 are not implemented yet. Next slice is Day 4 (headers and a tiny HTTP demo).
+See `WEEK_PLAN.md`. Days 4–5 are not implemented yet. Next slice is Day 4 (headers and a tiny HTTP demo), still not started as of 2026-09-27.
