@@ -1,4 +1,6 @@
 export { createDistributedLimiter } from "./distributed.js";
+export { rateLimitHeaders } from "./headers.js";
+export type { RateLimitHeaderMeta, RateLimitHeaders } from "./headers.js";
 export type { AsyncLimiter, DistributedLimiterOptions } from "./distributed.js";
 export { createLimiter } from "./limiter.js";
 export type {

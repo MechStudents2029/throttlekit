@@ -22,11 +22,11 @@
 - Shipped 2026-09-28. `createLimiter` stays the synchronous in-memory default.
 - Merged on main 2026-09-27; no further Day 3 behavior changes.
 
-## Day 4 — Headers + tiny HTTP demo
-- `X-RateLimit-*` / `Retry-After` helpers
-- Minimal local demo server using a free public API (JSONPlaceholder) behind the limiter
-- Status 2026-09-27: not started.
-- Next slice after Day 3; no `X-RateLimit-*` helpers or demo server on main yet.
+## Day 4 — Headers + tiny HTTP demo ✅
+- `rateLimitHeaders` maps a `tryTake` decision onto `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, and `Retry-After` when denied
+- Minimal local demo (`examples/demo-server`) proxies JSONPlaceholder behind `createLimiter`
+- Vitest unit tests for the header helpers (no network)
+- Shipped 2026-09-28. Days 1–3 limiter and store behavior unchanged.
 
 ## Day 5 — Benchmarks + README polish
 - Microbench script
