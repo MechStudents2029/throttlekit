@@ -14,11 +14,12 @@
 - Shipped 2026-09-25. Token bucket stays the default when `strategy` is omitted.
 - Merged on main 2026-09-25; no further Day 2 behavior changes.
 
-## Day 3 — Distributed backend (optional Redis)
-- docker-compose Redis
-- Redis-backed limiter
-- Integration tests skip if Redis down
-- Status 2026-09-25: not started.
+## Day 3 — Distributed backend (optional Redis) ✅
+- `LimiterStore` interface. `createMemoryStore` is the in-process store. `createRedisStore` is optional.
+- `docker-compose.yml` runs local Redis at `redis://127.0.0.1:6379`
+- `createDistributedLimiter` shares token-bucket and sliding-window counters for one store and key
+- Vitest covers the Redis client with a mock, and skips the live test when Redis is down
+- Shipped 2026-09-28. `createLimiter` stays the synchronous in-memory default.
 
 ## Day 4 — Headers + tiny HTTP demo
 - `X-RateLimit-*` / `Retry-After` helpers
