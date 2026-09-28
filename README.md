@@ -166,3 +166,4 @@ An allowed response forwards the upstream JSON and sets `X-RateLimit-*`. The nex
 ## Week plan
 
 See `WEEK_PLAN.md`. Day 4 (headers and the JSONPlaceholder demo) shipped 2026-09-28. Day 5 (benchmarks and README polish) is unstarted.
+Day 5 benchmarks are next and remain unstarted as of 2026-09-28.
