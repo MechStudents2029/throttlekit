@@ -19,3 +19,4 @@
 - 2026-09-28 — Day 4 squash-merged on main (3f093a3); rate-limit headers and JSONPlaceholder demo left as shipped.
 - 2026-09-28 — Day 4 keeps rate-limit header helpers and the JSONPlaceholder demo as shipped; that behavior is frozen.
 - 2026-09-28 — Day 5 benchmarks are next and still unstarted.
+- 2026-09-28 — Day 5 microbench script is not in the repo yet.
