@@ -25,6 +25,7 @@
 ## Day 4 — Headers + tiny HTTP demo
 - `X-RateLimit-*` / `Retry-After` helpers
 - Minimal local demo server using a free public API (JSONPlaceholder) behind the limiter
+- Status 2026-09-27: not started.
 
 ## Day 5 — Benchmarks + README polish
 - Microbench script
