@@ -20,6 +20,7 @@
 - `createDistributedLimiter` shares token-bucket and sliding-window counters for one store and key
 - Vitest covers the Redis client with a mock, and skips the live test when Redis is down
 - Shipped 2026-09-28. `createLimiter` stays the synchronous in-memory default.
+- Merged on main 2026-09-27; no further Day 3 behavior changes.
 
 ## Day 4 — Headers + tiny HTTP demo
 - `X-RateLimit-*` / `Retry-After` helpers
