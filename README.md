@@ -19,6 +19,7 @@ Day 1 is on main as of 2026-09-24 and stays as shipped.
 Day 2 is on main as of 2026-09-25 and stays as shipped.
 Day 3 is on main as of 2026-09-27 and stays as shipped.
 Day 4 shipped 2026-09-28. Day 5 is unstarted. Days 1–3 limiter behavior stays as shipped.
+Day 4 is on main as of 2026-09-28 and stays as shipped.
 
 ## Setup
 
