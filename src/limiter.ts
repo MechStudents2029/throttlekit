@@ -1,3 +1,5 @@
+import { applyBucketTake, applyWindowTake, type BucketState, type WindowHit } from "./decide.js";
+
 /** Milliseconds. `now()` is monotonic for a given limiter only if the clock is. */
 export type Clock = {
   now(): number;
@@ -56,8 +58,6 @@ export type Limiter = {
   wait(n?: number): Promise<void>;
 };
 
-const TOKEN_EPSILON = 1e-9;
-
 function assertFiniteNumber(name: string, value: number): void {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     throw new Error(`${name} must be a finite number`);
@@ -76,18 +76,6 @@ function assertNonNegative(name: string, value: number): void {
   if (value < 0) {
     throw new Error(`${name} must be greater than or equal to 0`);
   }
-}
-
-/** Snap binary dust so an exact token count stays an exact integer. */
-function normalizeTokens(value: number): number {
-  if (value <= TOKEN_EPSILON) {
-    return 0;
-  }
-  const nearest = Math.round(value);
-  if (Math.abs(value - nearest) <= TOKEN_EPSILON) {
-    return nearest;
-  }
-  return value;
 }
 
 function systemSleep(ms: number): Promise<void> {
@@ -134,33 +122,7 @@ function createTokenBucketLimiter(options: TokenBucketOptions): Limiter {
   const now = clock?.now ?? Date.now;
   const sleep = clock?.sleep ?? systemSleep;
 
-  let tokens = capacity;
-  let updatedAt = now();
-
-  function refill(at: number): void {
-    const elapsedMs = at - updatedAt;
-    if (elapsedMs <= 0) {
-      return;
-    }
-    updatedAt = at;
-    if (refillPerSecond === 0 || tokens >= capacity) {
-      return;
-    }
-    const added = (elapsedMs / 1000) * refillPerSecond;
-    tokens = normalizeTokens(Math.min(capacity, tokens + added));
-  }
-
-  function retryAfterMs(n: number): number {
-    if (refillPerSecond === 0) {
-      return Number.POSITIVE_INFINITY;
-    }
-    const deficit = n - tokens;
-    if (deficit <= TOKEN_EPSILON) {
-      return 0;
-    }
-    const ms = (deficit / refillPerSecond) * 1000;
-    return Math.max(1, Math.ceil(ms - TOKEN_EPSILON));
-  }
+  let state: BucketState = { tokens: capacity, updatedAt: now() };
 
   function takeCount(n: number | undefined): number {
     const count = n ?? 1;
@@ -173,16 +135,9 @@ function createTokenBucketLimiter(options: TokenBucketOptions): Limiter {
 
   function tryTake(n?: number): TakeResult {
     const count = takeCount(n);
-    refill(now());
-    if (tokens + TOKEN_EPSILON >= count) {
-      tokens = normalizeTokens(tokens - count);
-      return { ok: true, remaining: tokens, retryAfterMs: 0 };
-    }
-    return {
-      ok: false,
-      remaining: tokens,
-      retryAfterMs: retryAfterMs(count),
-    };
+    const decided = applyBucketTake(state, count, now(), capacity, refillPerSecond);
+    state = decided.state;
+    return decided.result;
   }
 
   async function wait(n?: number): Promise<void> {
@@ -202,11 +157,6 @@ function createTokenBucketLimiter(options: TokenBucketOptions): Limiter {
 
   return { tryTake, wait };
 }
-
-type WindowHit = {
-  at: number;
-  weight: number;
-};
 
 function assertPositiveInteger(name: string, value: number): void {
   if (typeof value !== "number" || !Number.isInteger(value) || value <= 0) {
@@ -228,7 +178,7 @@ function createSlidingWindowLimiter(options: SlidingWindowOptions): Limiter {
   const now = clock?.now ?? Date.now;
   const sleep = clock?.sleep ?? systemSleep;
 
-  const hits: WindowHit[] = [];
+  let hits: WindowHit[] = [];
 
   function takeCount(n: number | undefined): number {
     const count = n ?? 1;
@@ -239,58 +189,11 @@ function createSlidingWindowLimiter(options: SlidingWindowOptions): Limiter {
     return count;
   }
 
-  function prune(at: number): void {
-    const oldestKept = at - windowMs;
-    let write = 0;
-    for (let read = 0; read < hits.length; read += 1) {
-      const hit = hits[read]!;
-      if (hit.at > oldestKept) {
-        hits[write] = hit;
-        write += 1;
-      }
-    }
-    hits.length = write;
-    hits.sort((left, right) => left.at - right.at);
-  }
-
-  function occupied(): number {
-    let used = 0;
-    for (const hit of hits) {
-      used += hit.weight;
-    }
-    return used;
-  }
-
-  function msUntilFit(count: number, at: number): number {
-    let need = occupied() + count - max;
-    if (need <= 0) {
-      return 0;
-    }
-    for (const hit of hits) {
-      need -= hit.weight;
-      if (need <= 0) {
-        const ms = hit.at + windowMs - at;
-        return Math.max(1, Math.ceil(ms - TOKEN_EPSILON));
-      }
-    }
-    return Number.POSITIVE_INFINITY;
-  }
-
   function tryTake(n?: number): TakeResult {
     const count = takeCount(n);
-    const at = now();
-    prune(at);
-    const used = occupied();
-    if (used + count <= max) {
-      hits.push({ at, weight: count });
-      hits.sort((left, right) => left.at - right.at);
-      return { ok: true, remaining: max - used - count, retryAfterMs: 0 };
-    }
-    return {
-      ok: false,
-      remaining: max - used,
-      retryAfterMs: msUntilFit(count, at),
-    };
+    const decided = applyWindowTake(hits, count, now(), windowMs, max);
+    hits = decided.hits;
+    return decided.result;
   }
 
   async function wait(n?: number): Promise<void> {
