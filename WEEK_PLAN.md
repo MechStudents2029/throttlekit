@@ -27,6 +27,7 @@
 - Minimal local demo (`examples/demo-server`) proxies JSONPlaceholder behind `createLimiter`
 - Vitest unit tests for the header helpers (no network)
 - Shipped 2026-09-28. Days 1–3 limiter and store behavior unchanged.
+- Merged on main 2026-09-28; no further Day 4 header or demo behavior changes.
 
 ## Day 5 — Benchmarks + README polish
 - Microbench script
