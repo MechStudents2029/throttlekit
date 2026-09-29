@@ -24,3 +24,4 @@
 - 2026-09-29 — Day 5: README architecture section, resume bullets, and bench usage. Days 1–4 limiter, store, header, and demo behavior left as shipped.
 - 2026-09-29 — Day 5 squash-merged on main (0c0853e); in-memory microbench and README polish left as shipped. Days 1–4 limiter, store, header, and demo behavior stay frozen.
 - 2026-09-29 — Bench cases are documented in `BENCH.md`. The script throws if a take leaves the allowed path. No ops/sec sample is checked in; numbers come from a local `npm run bench` run.
+- 2026-09-29 — Next project is a dry-run CLI over `createLimiter` (see `WEEK_PLAN.md`). It is unstarted: no CLI file and no `package.json` script. Days 1–5 stay frozen.
