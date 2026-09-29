@@ -181,4 +181,4 @@ An allowed response forwards the upstream JSON and sets `X-RateLimit-*`. The nex
 
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 1–4 are on main and frozen. Day 5 (benchmarks and README polish) shipped 2026-09-29 and is pending merge.
+See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`).
