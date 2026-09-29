@@ -34,3 +34,13 @@
 - Architecture section and resume bullets in the README
 - Shipped 2026-09-29. Days 1–4 limiter, store, header, and demo behavior unchanged.
 - Merged on main 2026-09-29 (0c0853e); no further Day 5 bench or README behavior changes.
+
+## Next project — dry-run CLI (not started)
+
+Days 1–5 are on main. Admission, store, header, demo, and bench behavior stay frozen.
+
+Next local project, still free and with no paid APIs:
+
+- A small CLI that takes limiter options (`capacity` and `refillPerSecond`, or `windowMs` and `max`) and prints one `tryTake` decision.
+- It should call the existing `createLimiter`. It should not add a strategy, a store, or a header format.
+- Not started. `package.json` has no CLI script, and there is no CLI file under `examples/`.
