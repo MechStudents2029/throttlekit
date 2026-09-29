@@ -48,7 +48,7 @@ In-memory microbench (no Redis, no network):
 npm run bench
 ```
 
-That runs Vitest bench (`vitest bench --run`). It times the allowed `tryTake` path for the token bucket and the sliding window, `rateLimitHeaders` on a fixed decision, and `createDistributedLimiter` with `createMemoryStore`. Each bench injects a clock and steps it by a fixed amount, so the run does not sleep and stays on the allowed path.
+That runs Vitest bench (`vitest bench --run`) against [`bench/microbench.bench.ts`](bench/microbench.bench.ts), which `vitest.config.ts` includes as `bench/**/*.bench.ts`. It times the allowed `tryTake` path for the token bucket and the sliding window, `rateLimitHeaders` on a fixed decision, and `createDistributedLimiter` with `createMemoryStore`. Each bench injects a clock and steps it by a fixed amount, so the run does not sleep and stays on the allowed path. Case setup, and the fact that timings are not checked in, is in [`BENCH.md`](BENCH.md).
 
 ## Architecture
 
