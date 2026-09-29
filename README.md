@@ -6,21 +6,13 @@ Free/local only. No paid APIs.
 
 ## Status
 
-**Day 1** lands the core token-bucket limiter (`createLimiter`, `tryTake`, `wait`) and Vitest unit tests. The bucket starts full, refills continuously (fractional tokens included), and takes an injectable clock so tests do not use real timers.
+Days 1–4 are on main and frozen. Day 5 shipped 2026-09-29 and is pending merge. See `WEEK_PLAN.md`.
 
-**Day 2** adds a sliding-window counter on the same surface. Pass `strategy: "sliding-window"` with `windowMs` and `max`. Omit `strategy`, or pass `"token-bucket"`, to keep the Day 1 bucket.
-
-**Day 3** adds an optional shared store. `createLimiter` stays synchronous and in-memory. `createDistributedLimiter` keeps the same rules, but the counter lives in a `LimiterStore`: `createMemoryStore` in one process, or `createRedisStore` when several processes must share a counter. Local Redis only (`docker compose up -d`, or `REDIS_URL`). No paid APIs.
-
-**Day 4** adds `rateLimitHeaders`, which turns a `tryTake` decision into `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, and `Retry-After` when the take is denied. A small local server (`npm run demo` after `npm run build`) sits `createLimiter` in front of JSONPlaceholder.
-
-Day 5 (benchmarks and README polish) is still ahead. See `WEEK_PLAN.md`.
-Day 1 is on main as of 2026-09-24 and stays as shipped.
-Day 2 is on main as of 2026-09-25 and stays as shipped.
-Day 3 is on main as of 2026-09-27 and stays as shipped.
-Day 4 shipped 2026-09-28. Day 5 is unstarted. Days 1–3 limiter behavior stays as shipped.
-Day 4 is on main as of 2026-09-28 and stays as shipped.
-Day 5 benchmarks and README polish remain unstarted.
+- **Day 1** (2026-09-24) — token bucket: `createLimiter`, `tryTake`, `wait`, injectable clock.
+- **Day 2** (2026-09-25) — sliding window on the same surface (`strategy: "sliding-window"`).
+- **Day 3** (2026-09-27) — `LimiterStore`, `createMemoryStore`, `createRedisStore`, `createDistributedLimiter`.
+- **Day 4** (2026-09-28) — `rateLimitHeaders` and the JSONPlaceholder demo.
+- **Day 5** (2026-09-29) — in-memory microbench (`npm run bench`), architecture notes, and resume bullets. Pending merge.
 
 ## Setup
 
@@ -49,6 +41,29 @@ npm run build
 ```
 
 Watch mode: `npm run test:watch`.
+
+In-memory microbench (no Redis, no network):
+
+```bash
+npm run bench
+```
+
+That runs Vitest bench (`vitest bench --run`). It times the allowed `tryTake` path for the token bucket and the sliding window, `rateLimitHeaders` on a fixed decision, and `createDistributedLimiter` with `createMemoryStore`. Each bench injects a clock and steps it by a fixed amount, so the run does not sleep and stays on the allowed path.
+
+## Architecture
+
+Strategies, storage, and headers meet on one `TakeResult` (`ok`, `remaining`, `retryAfterMs`):
+
+1. **Strategy.** `createLimiter` keeps the counter in the process. Omit `strategy` for a token bucket (`capacity`, `refillPerSecond`). Pass `strategy: "sliding-window"` for a rolling count (`windowMs`, `max`). Both return the same decision.
+2. **Store.** `createDistributedLimiter` applies those same rules, but reads and writes the counter through a `LimiterStore` at `throttlekit:<key>`. `createMemoryStore` stays in one process. `createRedisStore` is the optional local Redis backend when several processes share a key. `createLimiter` does not use a store.
+3. **Headers.** `rateLimitHeaders` does not admit or deny. It turns a decision into `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, and `Retry-After` when the take was denied. The demo server is that path in front of JSONPlaceholder: one in-memory sliding window, then those headers.
+
+## Resume bullets
+
+- Built a TypeScript rate limiter with token-bucket and sliding-window strategies and an injectable clock, so admission rules can be tested without real timers.
+- Separated the decision rules from storage, so the same limits run in memory or on local Redis without a second implementation.
+- Mapped each decision to standard `X-RateLimit-*` and `Retry-After` headers and showed them on a small local proxy in front of a public API.
+- Added an in-memory microbench (`npm run bench`) for the allowed take paths and header mapping, with no Redis and no network.
 
 ## Usage
 
@@ -166,5 +181,4 @@ An allowed response forwards the upstream JSON and sets `X-RateLimit-*`. The nex
 
 ## Week plan
 
-See `WEEK_PLAN.md`. Day 4 (headers and the JSONPlaceholder demo) shipped 2026-09-28. Day 5 (benchmarks and README polish) is unstarted.
-Day 5 benchmarks are next and remain unstarted as of 2026-09-28.
+See `WEEK_PLAN.md`. Days 1–4 are on main and frozen. Day 5 (benchmarks and README polish) shipped 2026-09-29 and is pending merge.
