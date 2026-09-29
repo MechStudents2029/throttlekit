@@ -20,3 +20,6 @@
 - 2026-09-28 — Day 4 keeps rate-limit header helpers and the JSONPlaceholder demo as shipped; that behavior is frozen.
 - 2026-09-28 — Day 5 benchmarks are next and still unstarted.
 - 2026-09-28 — Day 5 microbench script is not in the repo yet.
+- 2026-09-29 — Day 5: in-memory microbench (`npm run bench`, `vitest bench --run`) for token-bucket `tryTake`, sliding-window `tryTake`, `rateLimitHeaders` on an allowed decision, and `createDistributedLimiter` with `createMemoryStore`. No Redis and no network.
+- 2026-09-29 — Day 5: README architecture section, resume bullets, and bench usage. Days 1–4 limiter, store, header, and demo behavior left as shipped.
+- 2026-09-29 — Day 5 shipped in this branch; merge is pending, so no merge SHA yet.

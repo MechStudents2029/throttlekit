@@ -29,9 +29,8 @@
 - Shipped 2026-09-28. Days 1–3 limiter and store behavior unchanged.
 - Merged on main 2026-09-28; no further Day 4 header or demo behavior changes.
 
-## Day 5 — Benchmarks + README polish
-- Microbench script
-- Architecture + resume bullets
-- Status 2026-09-28: not started.
-- Next slice after Day 4; benchmarks are unstarted.
-- No microbench script on main yet.
+## Day 5 — Benchmarks + README polish ✅
+- In-memory Vitest microbench (`npm run bench`): token-bucket `tryTake`, sliding-window `tryTake`, `rateLimitHeaders` on a decision, and `createDistributedLimiter` with `createMemoryStore`
+- Architecture section and resume bullets in the README
+- Shipped 2026-09-29. Days 1–4 limiter, store, header, and demo behavior unchanged.
+- Pending merge.
