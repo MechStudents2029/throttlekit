@@ -63,7 +63,7 @@ Strategies, storage, and headers meet on one `TakeResult` (`ok`, `remaining`, `r
 - Built a TypeScript rate limiter with token-bucket and sliding-window strategies and an injectable clock, so admission rules can be tested without real timers.
 - Separated the decision rules from storage, so the same limits run in memory or on local Redis without a second implementation.
 - Mapped each decision to standard `X-RateLimit-*` and `Retry-After` headers and showed them on a small local proxy in front of a public API.
-- Added an in-memory microbench (`npm run bench`) for the allowed take paths and header mapping, with no Redis and no network.
+- Added an in-memory microbench (`npm run bench`) for token-bucket `tryTake`, sliding-window `tryTake`, `rateLimitHeaders` on an allowed decision, and `createDistributedLimiter` with `createMemoryStore`, with no Redis and no network. Setup is in `BENCH.md`.
 
 ## Usage
 
