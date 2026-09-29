@@ -23,3 +23,4 @@
 - 2026-09-29 — Day 5: in-memory microbench (`npm run bench`, `vitest bench --run`) for token-bucket `tryTake`, sliding-window `tryTake`, `rateLimitHeaders` on an allowed decision, and `createDistributedLimiter` with `createMemoryStore`. No Redis and no network.
 - 2026-09-29 — Day 5: README architecture section, resume bullets, and bench usage. Days 1–4 limiter, store, header, and demo behavior left as shipped.
 - 2026-09-29 — Day 5 squash-merged on main (0c0853e); in-memory microbench and README polish left as shipped. Days 1–4 limiter, store, header, and demo behavior stay frozen.
+- 2026-09-29 — Bench cases are documented in `BENCH.md`. The script throws if a take leaves the allowed path. No ops/sec sample is checked in; numbers come from a local `npm run bench` run.
