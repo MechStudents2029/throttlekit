@@ -12,7 +12,7 @@ Days 1–5 are on main and frozen. Day 5 squash-merged 2026-09-29 (`0c0853e`). S
 - **Day 2** (2026-09-25) — sliding window on the same surface (`strategy: "sliding-window"`).
 - **Day 3** (2026-09-27) — `LimiterStore`, `createMemoryStore`, `createRedisStore`, `createDistributedLimiter`.
 - **Day 4** (2026-09-28) — `rateLimitHeaders` and the JSONPlaceholder demo.
-- **Day 5** (2026-09-29) — in-memory microbench (`npm run bench`), architecture notes, and resume bullets. Pending merge.
+- **Day 5** (2026-09-29) — in-memory microbench (`npm run bench`), architecture notes, and resume bullets. On main as `0c0853e`.
 
 ## Setup
 
