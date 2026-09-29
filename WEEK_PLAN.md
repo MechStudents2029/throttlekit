@@ -33,4 +33,4 @@
 - In-memory Vitest microbench (`npm run bench`): token-bucket `tryTake`, sliding-window `tryTake`, `rateLimitHeaders` on a decision, and `createDistributedLimiter` with `createMemoryStore`
 - Architecture section and resume bullets in the README
 - Shipped 2026-09-29. Days 1–4 limiter, store, header, and demo behavior unchanged.
-- Pending merge.
+- Merged on main 2026-09-29 (0c0853e); no further Day 5 bench or README behavior changes.
