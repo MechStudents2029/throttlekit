@@ -217,6 +217,8 @@ A fresh bucket starts full and a fresh window starts empty, so this first take i
 }
 ```
 
+Each flag takes a separate argument (`--capacity 10`). `--capacity=10` exits 1 as an unexpected argument. Repeating a flag exits 1 (`duplicate --capacity`). An unknown name exits 1 (`unknown option --clock`). Omit `--strategy`, or pass `--strategy token-bucket`, together with `--capacity` and `--refill-per-second`; that form rejects `--window-ms` and `--max` (`--window-ms does not apply to this strategy`). `--strategy sliding-window` requires `--window-ms` and `--max` and rejects `--capacity` and `--refill-per-second` the same way. `--help` and `-h` print usage on stdout and exit 0. No arguments print that usage on stderr and exit 1.
+
 The sliding-window command prints the same shape with `remaining` of `4`. `decision` is `allowed` when `ok` is true and `denied` when it is false. `remaining` and `retryAfterMs` are the `tryTake` fields. `--n` is the take size (default `1`). `--strategy token-bucket` is optional on the bucket form. `npm run dry-run -- --help` prints the flags.
 
 ## Week plan
