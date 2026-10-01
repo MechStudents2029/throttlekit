@@ -25,3 +25,5 @@
 - 2026-09-29 — Day 5 squash-merged on main (0c0853e); in-memory microbench and README polish left as shipped. Days 1–4 limiter, store, header, and demo behavior stay frozen.
 - 2026-09-29 — Bench cases are documented in `BENCH.md`. The script throws if a take leaves the allowed path. No ops/sec sample is checked in; numbers come from a local `npm run bench` run.
 - 2026-09-29 — Next project is a dry-run CLI over `createLimiter` (see `WEEK_PLAN.md`). It is unstarted: no CLI file and no `package.json` script. Days 1–5 stay frozen.
+- 2026-10-01 — Dry-run CLI: `examples/dry-run-cli/cli.mjs` and `npm run dry-run` print one `createLimiter` `tryTake` decision for token-bucket options (`capacity`, `refillPerSecond`) or sliding-window options (`windowMs`, `max`).
+- 2026-10-01 — Dry-run CLI calls the existing `createLimiter`. No new strategy, store, or header format. Days 1–5 limiter, store, header, demo, and bench behavior stay frozen.

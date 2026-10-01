@@ -6,13 +6,14 @@ Free/local only. No paid APIs.
 
 ## Status
 
-Days 1–5 are on main and frozen. Day 5 squash-merged 2026-09-29 (`0c0853e`). See `WEEK_PLAN.md`.
+Days 1–5 are on main and frozen. Day 5 squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI shipped 2026-10-01. See `WEEK_PLAN.md`.
 
 - **Day 1** (2026-09-24) — token bucket: `createLimiter`, `tryTake`, `wait`, injectable clock.
 - **Day 2** (2026-09-25) — sliding window on the same surface (`strategy: "sliding-window"`).
 - **Day 3** (2026-09-27) — `LimiterStore`, `createMemoryStore`, `createRedisStore`, `createDistributedLimiter`.
 - **Day 4** (2026-09-28) — `rateLimitHeaders` and the JSONPlaceholder demo.
 - **Day 5** (2026-09-29) — in-memory microbench (`npm run bench`), architecture notes, and resume bullets. On main as `0c0853e`.
+- **Dry-run CLI** (2026-10-01) — `npm run dry-run` prints one `tryTake` decision from `createLimiter` (token bucket or sliding window).
 
 ## Setup
 
@@ -179,6 +180,36 @@ curl -i http://127.0.0.1:3000/todos/1
 
 An allowed response forwards the upstream JSON and sets `X-RateLimit-*`. The next request past the limit is `429` with those headers and `Retry-After`.
 
+### Dry-run CLI
+
+`npm run dry-run` calls `createLimiter` and prints one `tryTake` decision. Build first so the script can import `dist/`.
+
+Token bucket (`capacity`, `refillPerSecond`):
+
+```bash
+npm run build
+npm run dry-run -- --capacity 10 --refill-per-second 2
+```
+
+Sliding window (`strategy: "sliding-window"`, `windowMs`, `max`):
+
+```bash
+npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5
+```
+
+A fresh bucket starts full and a fresh window starts empty, so this first take is allowed when the cost fits. The token-bucket command above prints:
+
+```json
+{
+  "decision": "allowed",
+  "ok": true,
+  "remaining": 9,
+  "retryAfterMs": 0
+}
+```
+
+The sliding-window command prints the same shape with `remaining` of `4`. `decision` is `allowed` when `ok` is true and `denied` when it is false. `remaining` and `retryAfterMs` are the `tryTake` fields. `--n` is the take size (default `1`). `--strategy token-bucket` is optional on the bucket form. `npm run dry-run -- --help` prints the flags.
+
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`).
+See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI shipped 2026-10-01.
