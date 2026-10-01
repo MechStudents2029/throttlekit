@@ -51,6 +51,15 @@ npm run bench
 
 That runs Vitest bench (`vitest bench --run`) against [`bench/microbench.bench.ts`](bench/microbench.bench.ts), which `vitest.config.ts` includes as `bench/**/*.bench.ts`. It times the allowed `tryTake` path for the token bucket and the sliding window, `rateLimitHeaders` on a fixed decision, and `createDistributedLimiter` with `createMemoryStore`. Each bench injects a clock and steps it by a fixed amount, so the run does not sleep and stays on the allowed path. Case setup, and the fact that timings are not checked in, is in [`BENCH.md`](BENCH.md).
 
+One local decision (no Redis, no network). Build first so the script can import `dist/`:
+
+```bash
+npm run build
+npm run dry-run -- --capacity 10 --refill-per-second 2
+```
+
+`npm run dry-run` is `node examples/dry-run-cli/cli.mjs`. The sliding-window form is `npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5`. Flag details and the printed JSON are in the usage section below.
+
 ## Architecture
 
 Strategies, storage, and headers meet on one `TakeResult` (`ok`, `remaining`, `retryAfterMs`):
