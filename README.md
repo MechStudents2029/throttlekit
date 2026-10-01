@@ -191,7 +191,7 @@ An allowed response forwards the upstream JSON and sets `X-RateLimit-*`. The nex
 
 ### Dry-run CLI
 
-`npm run dry-run` calls `createLimiter` and prints one `tryTake` decision. Build first so the script can import `dist/`.
+`npm run dry-run` calls `createLimiter` and prints one `tryTake` decision. The script is [`examples/dry-run-cli/cli.mjs`](examples/dry-run-cli/cli.mjs) (`"dry-run": "node examples/dry-run-cli/cli.mjs"` in `package.json`). Build first so that file can import `dist/index.js`. If `dist/` is missing, the script exits 1 with `could not load dist/index.js; run npm run build first`.
 
 Token bucket (`capacity`, `refillPerSecond`):
 
