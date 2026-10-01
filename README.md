@@ -74,6 +74,7 @@ Strategies, storage, and headers meet on one `TakeResult` (`ok`, `remaining`, `r
 - Separated the decision rules from storage, so the same limits run in memory or on local Redis without a second implementation.
 - Mapped each decision to standard `X-RateLimit-*` and `Retry-After` headers and showed them on a small local proxy in front of a public API.
 - Added an in-memory microbench (`npm run bench`) for token-bucket `tryTake`, sliding-window `tryTake`, `rateLimitHeaders` on an allowed decision, and `createDistributedLimiter` with `createMemoryStore`, with no Redis and no network. Setup is in `BENCH.md`.
+- Added a local dry-run CLI (`npm run dry-run`) that prints one `createLimiter` `tryTake` decision for a token bucket or a sliding window, with no Redis and no network. Flags and the JSON shape are in `DRY_RUN.md`.
 
 ## Usage
 
@@ -225,7 +226,7 @@ The sliding-window command prints the same shape with `remaining` of `4`. The pr
 npm run dry-run -- --capacity 10 --refill-per-second 2 --n 3
 ```
 
-`--strategy token-bucket` is optional on the bucket form. `npm run dry-run -- --help` prints the flags.
+`--strategy token-bucket` is optional on the bucket form. `npm run dry-run -- --help` prints the flags. Flags, parse errors, and the JSON fields are written up in [`DRY_RUN.md`](DRY_RUN.md).
 
 ## Week plan
 
