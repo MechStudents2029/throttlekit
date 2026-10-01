@@ -42,3 +42,4 @@ Days 1–5 are on main. Admission, store, header, demo, and bench behavior stay 
 - A small CLI (`examples/dry-run-cli`, `npm run dry-run`) takes limiter options (`capacity` and `refillPerSecond`, or `strategy: "sliding-window"` with `windowMs` and `max`) and prints one `tryTake` decision.
 - It calls the existing `createLimiter`. It does not add a strategy, a store, or a header format.
 - Shipped 2026-10-01. Days 1–5 limiter, store, header, demo, and bench behavior unchanged.
+- Merged on main 2026-10-01 (fa5465d); no further dry-run CLI behavior changes in this slice.
