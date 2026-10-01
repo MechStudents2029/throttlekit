@@ -6,14 +6,14 @@ Free/local only. No paid APIs.
 
 ## Status
 
-Days 1–5 are on main and frozen. Day 5 squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI shipped 2026-10-01. See `WEEK_PLAN.md`.
+Days 1–5 are on main and frozen. Day 5 squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI squash-merged 2026-10-01 (`fa5465d`). See `WEEK_PLAN.md`.
 
 - **Day 1** (2026-09-24) — token bucket: `createLimiter`, `tryTake`, `wait`, injectable clock.
 - **Day 2** (2026-09-25) — sliding window on the same surface (`strategy: "sliding-window"`).
 - **Day 3** (2026-09-27) — `LimiterStore`, `createMemoryStore`, `createRedisStore`, `createDistributedLimiter`.
 - **Day 4** (2026-09-28) — `rateLimitHeaders` and the JSONPlaceholder demo.
 - **Day 5** (2026-09-29) — in-memory microbench (`npm run bench`), architecture notes, and resume bullets. On main as `0c0853e`.
-- **Dry-run CLI** (2026-10-01) — `npm run dry-run` prints one `tryTake` decision from `createLimiter` (token bucket or sliding window).
+- **Dry-run CLI** (2026-10-01) — `npm run dry-run` prints one `tryTake` decision from `createLimiter` (token bucket or sliding window). On main as `fa5465d`.
 
 ## Setup
 
