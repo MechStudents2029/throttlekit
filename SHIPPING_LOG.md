@@ -27,3 +27,4 @@
 - 2026-09-29 — Next project is a dry-run CLI over `createLimiter` (see `WEEK_PLAN.md`). It is unstarted: no CLI file and no `package.json` script. Days 1–5 stay frozen.
 - 2026-10-01 — Dry-run CLI: `examples/dry-run-cli/cli.mjs` and `npm run dry-run` print one `createLimiter` `tryTake` decision for token-bucket options (`capacity`, `refillPerSecond`) or sliding-window options (`windowMs`, `max`).
 - 2026-10-01 — Dry-run CLI calls the existing `createLimiter`. No new strategy, store, or header format. Days 1–5 limiter, store, header, demo, and bench behavior stay frozen.
+- 2026-10-01 — Dry-run CLI squash-merged on main (fa5465d). `npm run dry-run` runs `examples/dry-run-cli/cli.mjs`. Token bucket: `npm run dry-run -- --capacity 10 --refill-per-second 2`. Sliding window: `npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5`. Days 1–5 stay frozen.
