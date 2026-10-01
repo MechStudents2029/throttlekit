@@ -28,3 +28,4 @@
 - 2026-10-01 — Dry-run CLI: `examples/dry-run-cli/cli.mjs` and `npm run dry-run` print one `createLimiter` `tryTake` decision for token-bucket options (`capacity`, `refillPerSecond`) or sliding-window options (`windowMs`, `max`).
 - 2026-10-01 — Dry-run CLI calls the existing `createLimiter`. No new strategy, store, or header format. Days 1–5 limiter, store, header, demo, and bench behavior stay frozen.
 - 2026-10-01 — Dry-run CLI squash-merged on main (fa5465d). `npm run dry-run` runs `examples/dry-run-cli/cli.mjs`. Token bucket: `npm run dry-run -- --capacity 10 --refill-per-second 2`. Sliding window: `npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5`. Days 1–5 stay frozen.
+- 2026-10-01 — Next project is printing `rateLimitHeaders` for the one dry-run decision (see `WEEK_PLAN.md`). It is unstarted: `examples/dry-run-cli/cli.mjs` does not import `rateLimitHeaders`. Days 1–5 and the dry-run decision shape stay frozen.

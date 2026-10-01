@@ -43,3 +43,13 @@ Days 1–5 are on main. Admission, store, header, demo, and bench behavior stay 
 - It calls the existing `createLimiter`. It does not add a strategy, a store, or a header format.
 - Shipped 2026-10-01. Days 1–5 limiter, store, header, demo, and bench behavior unchanged.
 - Merged on main 2026-10-01 (fa5465d); no further dry-run CLI behavior changes in this slice.
+
+## Next project — dry-run headers (not started)
+
+The dry-run CLI is on main (fa5465d). Admission, store, header, demo, and bench behavior stay frozen. The CLI still prints only the `tryTake` decision.
+
+Next local project, still free and with no paid APIs:
+
+- After that one decision, optionally print `rateLimitHeaders` for it: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, and `Retry-After` when the take is denied.
+- Call the existing helper with the same maximum the command already took (`capacity` or `max`). Do not add a strategy, a store, or a header format.
+- Not started. `examples/dry-run-cli/cli.mjs` does not import `rateLimitHeaders`, and `package.json` has no second script for it.

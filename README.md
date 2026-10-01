@@ -230,4 +230,4 @@ npm run dry-run -- --capacity 10 --refill-per-second 2 --n 3
 
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI shipped 2026-10-01.
+See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI squash-merged 2026-10-01 (`fa5465d`). Next, and still unstarted, is printing `rateLimitHeaders` for that one dry-run decision.
