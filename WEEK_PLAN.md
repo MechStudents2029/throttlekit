@@ -56,3 +56,12 @@ The dry-run CLI is on main (fa5465d). Admission, store, header helper, demo, and
 ## Stretch goals
 
 The ThrottleKit week is done. Days 1–5, the dry-run CLI (`fa5465d`), and dry-run headers (`ea9ee0d`) are on main. Admission, store, header helper, demo, bench, and the CLI decision path stay frozen. Further resume work is a new public repo, not another slice in this one.
+
+## Next repo — faultline (not started)
+
+The ThrottleKit week is done. The next small public resume repo is separate from this one.
+
+- Working name: `faultline`. A TypeScript CLI that prints recent significant earthquakes from the USGS GeoJSON summary feed.
+- The feed is `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_day.geojson`. It is a public USGS endpoint and does not take an API key or an account.
+- Every source in that repo stays on free APIs that do not require a key. Paid APIs and keyed services are out of scope.
+- Not started. This repo does not gain an earthquake client. ThrottleKit behavior stays frozen.
