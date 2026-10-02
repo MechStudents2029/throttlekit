@@ -32,3 +32,4 @@
 - 2026-10-02 — Dry-run headers: `npm run dry-run` prints `rateLimitHeaders` for the one `tryTake` decision. `headers` uses the existing helper with `limit` set to `--capacity` or `--max`.
 - 2026-10-02 — Dry-run headers call the existing `rateLimitHeaders`. No new strategy, store, header format, script, or flag. Days 1–5 limiter, store, header, demo, and bench behavior stay frozen. The decision fields stay; `headers` is added on the same JSON object.
 - 2026-10-02 — ThrottleKit stretch goals are done. Admission, store, header helper, demo, bench, and the CLI decision path stay frozen.
+- 2026-10-02 — Dry-run headers squash-merged on main (ea9ee0d) from pull request 7. `npm run dry-run` prints `headers` from `rateLimitHeaders` on the one `tryTake` decision. Days 1–5 and the decision fields stay frozen.
