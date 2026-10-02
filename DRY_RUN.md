@@ -71,6 +71,24 @@ Sliding window, max 5 taking 1. `limit` is `"5"` and `remaining` is 4. The reset
 }
 ```
 
+Capacity 10 with `--n 3` (`npm run dry-run -- --capacity 10 --refill-per-second 2 --n 3`) still allows the take. `remaining` is 7, `X-RateLimit-Limit` stays `"10"`, and `X-RateLimit-Remaining` is `"7"`.
+
+```json
+{
+  "decision": "allowed",
+  "ok": true,
+  "remaining": 7,
+  "retryAfterMs": 0,
+  "headers": {
+    "X-RateLimit-Limit": "10",
+    "X-RateLimit-Remaining": "7",
+    "X-RateLimit-Reset": "1759412345"
+  }
+}
+```
+
+A denied take would insert `Retry-After` before `X-RateLimit-Reset`. This CLI does not print that case. It builds one fresh limiter and calls `tryTake` once, so a cost that fits is allowed. A cost that can never succeed throws (`n (11) exceeds capacity (10)`, or `n (6) exceeds max (5)`) and exits 1 with no JSON object.
+
 ## Commands
 
 ```bash
