@@ -51,6 +51,7 @@ The dry-run CLI is on main (fa5465d). Admission, store, header helper, demo, and
 - After that one `tryTake` decision, `npm run dry-run` prints `rateLimitHeaders` for it on the same JSON object (`headers`): `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, and `Retry-After` when the take is denied.
 - It calls the existing helper with the same maximum the command already took (`capacity` or `max`). No new strategy, store, header format, script, or flag. Every successful dry-run includes the header map.
 - Shipped 2026-10-02. Days 1–5 limiter, store, header, demo, and bench behavior unchanged. The dry-run decision fields stay; `headers` is added beside them.
+- Merged on main 2026-10-02 (ea9ee0d); no further dry-run header behavior changes in this slice.
 
 ## Stretch goals
 
