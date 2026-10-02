@@ -6,7 +6,7 @@ Free/local only. No paid APIs.
 
 ## Status
 
-Days 1–5 are on main and frozen. Day 5 squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI squash-merged 2026-10-01 (`fa5465d`). See `WEEK_PLAN.md`.
+Days 1–5 are on main and frozen. Day 5 squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI squash-merged 2026-10-01 (`fa5465d`). Dry-run headers shipped 2026-10-02. See `WEEK_PLAN.md`.
 
 - **Day 1** (2026-09-24) — token bucket: `createLimiter`, `tryTake`, `wait`, injectable clock.
 - **Day 2** (2026-09-25) — sliding window on the same surface (`strategy: "sliding-window"`).
@@ -14,6 +14,7 @@ Days 1–5 are on main and frozen. Day 5 squash-merged 2026-09-29 (`0c0853e`). T
 - **Day 4** (2026-09-28) — `rateLimitHeaders` and the JSONPlaceholder demo.
 - **Day 5** (2026-09-29) — in-memory microbench (`npm run bench`), architecture notes, and resume bullets. On main as `0c0853e`.
 - **Dry-run CLI** (2026-10-01) — `npm run dry-run` prints one `tryTake` decision from `createLimiter` (token bucket or sliding window). On main as `fa5465d`.
+- **Dry-run headers** (2026-10-02) — that same command also prints `rateLimitHeaders` for the decision, with `limit` set to `capacity` or `max`.
 
 ## Setup
 
@@ -51,7 +52,7 @@ npm run bench
 
 That runs Vitest bench (`vitest bench --run`) against [`bench/microbench.bench.ts`](bench/microbench.bench.ts), which `vitest.config.ts` includes as `bench/**/*.bench.ts`. It times the allowed `tryTake` path for the token bucket and the sliding window, `rateLimitHeaders` on a fixed decision, and `createDistributedLimiter` with `createMemoryStore`. Each bench injects a clock and steps it by a fixed amount, so the run does not sleep and stays on the allowed path. Case setup, and the fact that timings are not checked in, is in [`BENCH.md`](BENCH.md).
 
-One local decision (no Redis, no network). Build first so the script can import `dist/`:
+One local decision and its rate-limit headers (no Redis, no network). Build first so the script can import `dist/`:
 
 ```bash
 npm run build
@@ -74,7 +75,7 @@ Strategies, storage, and headers meet on one `TakeResult` (`ok`, `remaining`, `r
 - Separated the decision rules from storage, so the same limits run in memory or on local Redis without a second implementation.
 - Mapped each decision to standard `X-RateLimit-*` and `Retry-After` headers and showed them on a small local proxy in front of a public API.
 - Added an in-memory microbench (`npm run bench`) for token-bucket `tryTake`, sliding-window `tryTake`, `rateLimitHeaders` on an allowed decision, and `createDistributedLimiter` with `createMemoryStore`, with no Redis and no network. Setup is in `BENCH.md`.
-- Added a local dry-run CLI (`npm run dry-run`) that prints one `createLimiter` `tryTake` decision for a token bucket or a sliding window, with no Redis and no network. Flags and the JSON shape are in `DRY_RUN.md`.
+- Added a local dry-run CLI (`npm run dry-run`) that prints one `createLimiter` `tryTake` decision and its `rateLimitHeaders` for a token bucket or a sliding window, with no Redis and no network. Flags and the JSON shape are in `DRY_RUN.md`.
 
 ## Usage
 
@@ -192,7 +193,7 @@ An allowed response forwards the upstream JSON and sets `X-RateLimit-*`. The nex
 
 ### Dry-run CLI
 
-`npm run dry-run` calls `createLimiter` and prints one `tryTake` decision. The script is [`examples/dry-run-cli/cli.mjs`](examples/dry-run-cli/cli.mjs) (`"dry-run": "node examples/dry-run-cli/cli.mjs"` in `package.json`). Build first so that file can import `dist/index.js`. If `dist/` is missing, the script exits 1 with `could not load dist/index.js; run npm run build first`.
+`npm run dry-run` calls `createLimiter`, takes once, then calls `rateLimitHeaders` for that decision. The script is [`examples/dry-run-cli/cli.mjs`](examples/dry-run-cli/cli.mjs) (`"dry-run": "node examples/dry-run-cli/cli.mjs"` in `package.json`). Build first so that file can import `dist/index.js`. If `dist/` is missing, the script exits 1 with `could not load dist/index.js; run npm run build first`. The limit passed to the helper is `--capacity` on a token bucket and `--max` on a sliding window. Headers are part of every successful print. There is no extra flag and no second script.
 
 Token bucket (`capacity`, `refillPerSecond`):
 
@@ -207,20 +208,25 @@ Sliding window (`strategy: "sliding-window"`, `windowMs`, `max`):
 npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5
 ```
 
-A fresh bucket starts full and a fresh window starts empty, so this first take is allowed when the cost fits. The token-bucket command above prints:
+A fresh bucket starts full and a fresh window starts empty, so this first take is allowed when the cost fits. The token-bucket command above prints this shape. `X-RateLimit-Reset` is the Unix second from `Date.now()` inside `rateLimitHeaders`, so that value changes each run. The reset in the snippet is an example of that field. `Retry-After` is omitted because the take is allowed:
 
 ```json
 {
   "decision": "allowed",
   "ok": true,
   "remaining": 9,
-  "retryAfterMs": 0
+  "retryAfterMs": 0,
+  "headers": {
+    "X-RateLimit-Limit": "10",
+    "X-RateLimit-Remaining": "9",
+    "X-RateLimit-Reset": "1759412345"
+  }
 }
 ```
 
 Each flag takes a separate argument (`--capacity 10`). `--capacity=10` exits 1 as an unexpected argument. Repeating a flag exits 1 (`duplicate --capacity`). An unknown name exits 1 (`unknown option --clock`). Omit `--strategy`, or pass `--strategy token-bucket`, together with `--capacity` and `--refill-per-second`; that form rejects `--window-ms` and `--max` (`--window-ms does not apply to this strategy`). `--strategy sliding-window` requires `--window-ms` and `--max` and rejects `--capacity` and `--refill-per-second` the same way. `--help` and `-h` print usage on stdout and exit 0. No arguments print that usage on stderr and exit 1.
 
-The sliding-window command prints the same shape with `remaining` of `4`. The printed object always uses this key order and a two-space indent: `decision`, `ok`, `remaining`, `retryAfterMs`. `decision` is `allowed` when `ok` is true and `denied` when it is false. `ok`, `remaining`, and `retryAfterMs` are copied from `tryTake`. A non-finite `retryAfterMs` is printed as the JSON string `"Infinity"` or `"-Infinity"`, because `JSON.stringify` cannot represent those numbers. A printed decision exits 0. A cost that can never succeed throws from the limiter (`n (11) exceeds capacity (10)`, or `n (6) exceeds max (5)`); the CLI writes that message to stderr and exits 1, and it does not print a `denied` object. The command builds a new limiter and calls `tryTake` once. A fresh bucket starts full and a fresh window starts empty, so a cost that fits is `allowed`. `--n` is the take size and defaults to `1`. A fresh bucket starts full, so capacity 10 taking 3 tokens prints `remaining` of `7`:
+The sliding-window command prints the same shape with `remaining` of `4`, `X-RateLimit-Limit` of `"5"`, and `X-RateLimit-Remaining` of `"4"`. The printed object always uses this key order and a two-space indent: `decision`, `ok`, `remaining`, `retryAfterMs`, `headers`. `decision` is `allowed` when `ok` is true and `denied` when it is false. `ok`, `remaining`, and `retryAfterMs` are copied from `tryTake`. `headers` is the object returned by `rateLimitHeaders`, key order included. A non-finite `retryAfterMs` is printed as the JSON string `"Infinity"` or `"-Infinity"`, because `JSON.stringify` cannot represent those numbers. A printed decision exits 0. A cost that can never succeed throws from the limiter (`n (11) exceeds capacity (10)`, or `n (6) exceeds max (5)`); the CLI writes that message to stderr and exits 1, and it does not print a `denied` object. The command builds a new limiter and calls `tryTake` once. A fresh bucket starts full and a fresh window starts empty, so a cost that fits is `allowed`. `--n` is the take size and defaults to `1`. A fresh bucket starts full, so capacity 10 taking 3 tokens prints `remaining` of `7`:
 
 ```bash
 npm run dry-run -- --capacity 10 --refill-per-second 2 --n 3
@@ -230,4 +236,4 @@ npm run dry-run -- --capacity 10 --refill-per-second 2 --n 3
 
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI squash-merged 2026-10-01 (`fa5465d`). Next, and still unstarted, is printing `rateLimitHeaders` for that one dry-run decision.
+See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI squash-merged 2026-10-01 (`fa5465d`). Dry-run headers shipped 2026-10-02. Stretch goals are done. Admission, store, header helper, demo, bench, and the CLI decision path stay frozen.

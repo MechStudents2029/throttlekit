@@ -1,6 +1,6 @@
 # Dry-run notes
 
-`npm run dry-run` runs `node examples/dry-run-cli/cli.mjs`. It calls the existing `createLimiter` and prints one `tryTake` decision. It does not open Redis or the network, and it does not add a strategy, a store, or a header format. Run `npm run build` first. If `dist/index.js` cannot be loaded, the script exits 1 with `could not load dist/index.js; run npm run build first`.
+`npm run dry-run` runs `node examples/dry-run-cli/cli.mjs`. It calls the existing `createLimiter`, prints one `tryTake` decision, and prints `rateLimitHeaders` for that decision. The helper receives `{ limit }` where `limit` is `--capacity` (token bucket) or `--max` (sliding window). Headers are included on every successful print. There is no extra flag and no second script. It does not open Redis or the network, and it does not add a strategy, a store, or a header format. Run `npm run build` first. If `dist/index.js` cannot be loaded, the script exits 1 with `could not load dist/index.js; run npm run build first`.
 
 ## Flags
 
@@ -27,10 +27,13 @@ Stdout is one JSON object with a two-space indent. The keys are always in this o
 | `ok` | The `tryTake` boolean. |
 | `remaining` | Tokens left, or window units still free, after the call. |
 | `retryAfterMs` | `0` when the take was allowed. Otherwise the wait until a later take could succeed. `Infinity` and `-Infinity` are the JSON strings `"Infinity"` and `"-Infinity"`. |
+| `headers` | The object returned by `rateLimitHeaders(decision, { limit })`. `limit` is `--capacity` or `--max`. Keys stay in the helper's order: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, then `X-RateLimit-Reset` when the reset is finite. `Retry-After` is present only when the take is denied and `retryAfterMs` is finite, and the helper inserts it before `X-RateLimit-Reset`. |
+
+`X-RateLimit-Reset` is Unix seconds. The dry-run does not pass `nowMs`, so the helper uses `Date.now()` and that value changes each run. A fresh limiter's first fitting take is allowed, so a successful dry-run omits `Retry-After`.
 
 A printed decision exits 0. A cost that can never succeed throws before a decision is printed: `n (11) exceeds capacity (10)` on a token bucket, or `n (6) exceeds max (5)` on a sliding window. That error goes to stderr and the process exits 1. It is not a `denied` object.
 
-The process builds a new limiter and calls `tryTake` once. A fresh token bucket starts full, so refill does not change the first take, and `remaining` is `capacity` minus `--n`. A fresh sliding window starts empty, so a cost that fits is allowed and `remaining` is `max` minus `--n`. The README examples (`capacity` 10 taking 1, and `max` 5 taking 1) print `remaining` 9 and 4. Capacity 10 with `--n 3` prints `remaining` 7.
+The process builds a new limiter and calls `tryTake` once. A fresh token bucket starts full, so refill does not change the first take, and `remaining` is `capacity` minus `--n`. A fresh sliding window starts empty, so a cost that fits is allowed and `remaining` is `max` minus `--n`. The README examples (`capacity` 10 taking 1, and `max` 5 taking 1) print `remaining` 9 and 4, `X-RateLimit-Limit` `"10"` and `"5"`, and `X-RateLimit-Remaining` `"9"` and `"4"`. Capacity 10 with `--n 3` prints `remaining` 7 and `X-RateLimit-Remaining` `"7"`.
 
 ## Commands
 
