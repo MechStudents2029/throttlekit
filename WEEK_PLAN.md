@@ -65,3 +65,11 @@ The ThrottleKit week is done. The next small public resume repo is separate from
 - The feed is `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_day.geojson`. It is a public USGS endpoint and does not take an API key or an account.
 - Every source in that repo stays on free APIs that do not require a key. Paid APIs and keyed services are out of scope.
 - Not started. This repo does not gain an earthquake client. ThrottleKit behavior stays frozen.
+
+Planned slices, still unstarted, in the new repo only:
+
+- Day 1: parse GeoJSON `features` into `id`, `magnitude`, `place`, and `time` from a checked-in fixture. Tests do not open the network.
+- Day 2: `npm run quakes` fetches that same `significant_day` URL and prints one JSON array. `--min-magnitude` drops smaller events. No key is sent.
+- Day 3: the README records the feed URL, the no-key constraint, and that `npm test` stays on the fixture.
+
+A second source is allowed only if it is also free and keyless. Open-Meteo (`https://api.open-meteo.com/v1/forecast`, no key) can later attach a temperature to a quake coordinate. It is not part of the first slice.
