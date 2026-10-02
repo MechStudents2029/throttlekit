@@ -35,6 +35,26 @@ A printed decision exits 0. A cost that can never succeed throws before a decisi
 
 The process builds a new limiter and calls `tryTake` once. A fresh token bucket starts full, so refill does not change the first take, and `remaining` is `capacity` minus `--n`. A fresh sliding window starts empty, so a cost that fits is allowed and `remaining` is `max` minus `--n`. The README examples (`capacity` 10 taking 1, and `max` 5 taking 1) print `remaining` 9 and 4, `X-RateLimit-Limit` `"10"` and `"5"`, and `X-RateLimit-Remaining` `"9"` and `"4"`. Capacity 10 with `--n 3` prints `remaining` 7 and `X-RateLimit-Remaining` `"7"`.
 
+## Header examples
+
+These commands build a fresh limiter and call `tryTake` once, so a cost that fits is allowed. `X-RateLimit-Reset` comes from `Date.now()` inside `rateLimitHeaders`. The reset seconds below are examples of that field, matching the README snippet, and the next run will print a different second. `Retry-After` is absent because the take is allowed.
+
+Token bucket, capacity 10 taking 1. `limit` is `"10"` and `remaining` is 9. Command: `npm run dry-run -- --capacity 10 --refill-per-second 2`.
+
+```json
+{
+  "decision": "allowed",
+  "ok": true,
+  "remaining": 9,
+  "retryAfterMs": 0,
+  "headers": {
+    "X-RateLimit-Limit": "10",
+    "X-RateLimit-Remaining": "9",
+    "X-RateLimit-Reset": "1759412345"
+  }
+}
+```
+
 ## Commands
 
 ```bash
