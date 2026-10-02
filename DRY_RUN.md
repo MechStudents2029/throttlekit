@@ -55,6 +55,22 @@ Token bucket, capacity 10 taking 1. `limit` is `"10"` and `remaining` is 9. Comm
 }
 ```
 
+Sliding window, max 5 taking 1. `limit` is `"5"` and `remaining` is 4. The reset second is the same kind of example. Command: `npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5`.
+
+```json
+{
+  "decision": "allowed",
+  "ok": true,
+  "remaining": 4,
+  "retryAfterMs": 0,
+  "headers": {
+    "X-RateLimit-Limit": "5",
+    "X-RateLimit-Remaining": "4",
+    "X-RateLimit-Reset": "1759412345"
+  }
+}
+```
+
 ## Commands
 
 ```bash
