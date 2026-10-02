@@ -1,27 +1,37 @@
 /**
- * Dry-run one `tryTake` on the existing in-memory `createLimiter`.
+ * Dry-run one `tryTake` on the existing in-memory `createLimiter`, then
+ * print `rateLimitHeaders` for that decision.
  *
  *   npm run build
  *   npm run dry-run -- --capacity 10 --refill-per-second 2
  *   npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5
  *
- * Prints one JSON decision: `allowed` or `denied`, plus `ok`, `remaining`,
- * and `retryAfterMs`. No new strategy, store, or header format.
+ * Prints one JSON object: `allowed` or `denied`, plus `ok`, `remaining`,
+ * `retryAfterMs`, and `headers`. Headers come from `rateLimitHeaders` with
+ * `limit` set to the same maximum the command took (`--capacity` or `--max`):
+ * `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, and
+ * `Retry-After` when the take is denied. Every successful dry-run includes
+ * that map. There is no second script and no extra flag. No new strategy,
+ * store, or header format.
  */
 const USAGE = `Usage:
   npm run dry-run -- --capacity <n> --refill-per-second <n> [--n <units>]
   npm run dry-run -- --strategy token-bucket --capacity <n> --refill-per-second <n> [--n <units>]
   npm run dry-run -- --strategy sliding-window --window-ms <ms> --max <n> [--n <units>]
 
-Prints one tryTake decision as JSON:
+Prints one tryTake decision as JSON, including rateLimitHeaders for it:
   decision      "allowed" when ok is true, otherwise "denied"
   ok            whether this take was admitted
   remaining     capacity left after the call
   retryAfterMs  0 when allowed; otherwise the wait until a later take could succeed
+  headers       rateLimitHeaders(decision, { limit }) where limit is --capacity
+                or --max. Keys are X-RateLimit-Limit, X-RateLimit-Remaining,
+                X-RateLimit-Reset, and Retry-After when the take is denied
+                and the wait is finite. Printed on every successful dry-run.
 
 Run npm run build first so this file can import dist/.
 A fresh limiter starts full (token bucket) or empty (sliding window), so the
-first take is allowed when the cost fits.`;
+first take is allowed when the cost fits. That allowed take omits Retry-After.`;
 
 const KNOWN = new Set([
   "strategy",
@@ -127,12 +137,17 @@ function limiterOptions(flags) {
   return { strategy };
 }
 
-function printDecision(result) {
+function configuredLimit(options) {
+  return options.strategy === "sliding-window" ? options.max : options.capacity;
+}
+
+function printDecision(result, headers) {
   const payload = {
     decision: result.ok ? "allowed" : "denied",
     ok: result.ok,
     remaining: result.remaining,
     retryAfterMs: result.retryAfterMs,
+    headers,
   };
   const json = JSON.stringify(
     payload,
@@ -149,15 +164,17 @@ async function main() {
   const n = flags.has("n") ? readNumber(flags, "n") : undefined;
 
   let createLimiter;
+  let rateLimitHeaders;
   try {
-    ({ createLimiter } = await import("../../dist/index.js"));
+    ({ createLimiter, rateLimitHeaders } = await import("../../dist/index.js"));
   } catch {
     fail("could not load dist/index.js; run npm run build first");
   }
 
   const limiter = createLimiter(options);
   const result = n === undefined ? limiter.tryTake() : limiter.tryTake(n);
-  printDecision(result);
+  const headers = rateLimitHeaders(result, { limit: configuredLimit(options) });
+  printDecision(result, headers);
 }
 
 main().catch((error) => {
