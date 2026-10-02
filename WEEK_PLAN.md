@@ -55,4 +55,4 @@ The dry-run CLI is on main (fa5465d). Admission, store, header helper, demo, and
 
 ## Stretch goals
 
-ThrottleKit stretch goals are done. Admission, store, header helper, demo, bench, and the CLI decision path stay frozen.
+The ThrottleKit week is done. Days 1–5, the dry-run CLI (`fa5465d`), and dry-run headers (`ea9ee0d`) are on main. Admission, store, header helper, demo, bench, and the CLI decision path stay frozen. Further resume work is a new public repo, not another slice in this one.
