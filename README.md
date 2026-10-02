@@ -59,7 +59,7 @@ npm run build
 npm run dry-run -- --capacity 10 --refill-per-second 2
 ```
 
-`npm run dry-run` is `node examples/dry-run-cli/cli.mjs`. The sliding-window form is `npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5`. Flag details and the printed JSON are in the usage section below.
+`npm run dry-run` is `node examples/dry-run-cli/cli.mjs`. The sliding-window form is `npm run dry-run -- --strategy sliding-window --window-ms 10000 --max 5`. Flag details and the printed JSON are in the usage section below. The header objects for the token-bucket, sliding-window, and three-token commands are in [DRY_RUN.md](DRY_RUN.md#header-examples).
 
 ## Architecture
 
@@ -232,8 +232,8 @@ The sliding-window command prints the same shape with `remaining` of `4`, `X-Rat
 npm run dry-run -- --capacity 10 --refill-per-second 2 --n 3
 ```
 
-`--strategy token-bucket` is optional on the bucket form. `npm run dry-run -- --help` prints the flags. Flags, parse errors, and the JSON fields are written up in [`DRY_RUN.md`](DRY_RUN.md).
+`--strategy token-bucket` is optional on the bucket form. `npm run dry-run -- --help` prints the flags. Flags, parse errors, and the JSON fields are written up in [`DRY_RUN.md`](DRY_RUN.md). The allowed header objects are in [Header examples](DRY_RUN.md#header-examples).
 
 ## Week plan
 
-See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI squash-merged 2026-10-01 (`fa5465d`). Dry-run headers shipped 2026-10-02. Stretch goals are done. Admission, store, header helper, demo, bench, and the CLI decision path stay frozen.
+See `WEEK_PLAN.md`. Days 1–5 are on main and frozen. Day 5 (benchmarks and README polish) squash-merged 2026-09-29 (`0c0853e`). The dry-run CLI squash-merged 2026-10-01 (`fa5465d`). Dry-run headers squash-merged 2026-10-02 (`ea9ee0d`). The ThrottleKit week is done. The next public resume repo planned in `WEEK_PLAN.md` is `faultline`, a USGS earthquake CLI that uses only free APIs with no key. Admission, store, header helper, demo, bench, and the CLI decision path stay frozen.
